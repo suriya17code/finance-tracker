@@ -24,7 +24,7 @@ export const SignUp = (username: string,email: string,password: string): Promise
     try {
       const userData = getUser() || [];
 
-      const existing = userData.find((user: any) => user.username === username);
+      const existing = userData.find((user) => user.username === username);
       if (existing) throw new Error("already exist");
 
       const newUser: User = { username, email, password };

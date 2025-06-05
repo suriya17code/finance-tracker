@@ -86,7 +86,7 @@
 // </form>
 //   );
 // }
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {Box,Container,Typography,Link,Divider,CardContent,useTheme,useMediaQuery,Fade} from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -97,7 +97,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useRouter } from 'next/navigation'; 
 import { login } from '@/lib/fakeAuthApi';
 import {  RootContainer, Character, FloatingCard, MiniChart, LogoText, StyledTextField,
-  rippleEffect, AnimatedBackground, Particle, ChartLine, LoginContainer, LoginButton, SocialButton } from '@/styles/animations/login';
+   AnimatedBackground, Particle, ChartLine, LoginContainer, LoginButton, SocialButton } from '@/styles/animations/login';
 
 
 
@@ -118,43 +118,82 @@ const TrackFinLogin = () => {
   const handleSignup=()=>{
      router.replace('/register');
  }
-  const handleSubmit = async(e:any) => {
+  // const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   // Add ripple effect
+  //   try {
+  //     await login(email, password);
+  //     router.push('/dashboard');
+  //   } catch (err: any) {
+  //     setError(err.message);
+  //   }
+  //   const button = (e.target as HTMLFormElement).querySelector('button[type="submit"]');
+  //   if (button) {
+  //     const ripple = document.createElement('span');
+  //     const rect = button.getBoundingClientRect();
+  //     const size = Math.max(rect.width, rect.height);
+  //     const x = e.clientX - rect.left - size / 2;
+  //     const y = e.clientY - rect.top - size / 2;
+      
+  //     ripple.style.cssText = `
+  //       width: ${size}px;
+  //       height: ${size}px;
+  //       left: ${x}px;
+  //       top: ${y}px;
+  //       position: absolute;
+  //       border-radius: 50%;
+  //       background: rgba(255, 255, 255, 0.6);
+  //       transform: scale(0);
+  //       animation: ${rippleEffect} 0.6s linear;
+  //       pointer-events: none;
+  //     `;
+      
+  //     button.appendChild(ripple);
+  //     setTimeout(() => ripple.remove(), 600);
+  //   }
+    
+  //   // console.log('Form submitted:', { email, password });
+  // };
+ // Separate ripple effect handler for mouse click
+  // const handleRipple = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   const button = e.currentTarget;
+  //   const rect = button.getBoundingClientRect();
+  //   const size = Math.max(rect.width, rect.height);
+  //   const x = e.clientX - rect.left - size / 2;
+  //   const y = e.clientY - rect.top - size / 2;
+
+  //   const ripple = document.createElement('span');
+  //   ripple.style.cssText = `
+  //     width: ${size}px;
+  //     height: ${size}px;
+  //     left: ${x}px;
+  //     top: ${y}px;
+  //     position: absolute;
+  //     border-radius: 50%;
+  //     background: rgba(255, 255, 255, 0.6);
+  //     transform: scale(0);
+  //     animation: ${rippleEffect} 0.6s linear;
+  //     pointer-events: none;
+  //   `;
+
+  //   button.appendChild(ripple);
+  //   setTimeout(() => ripple.remove(), 600);
+  // };
+
+  const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add ripple effect
     try {
       await login(email, password);
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message);
-    }
-    const button = e.target.querySelector('button[type="submit"]');
-    if (button) {
-      const ripple = document.createElement('span');
-      const rect = button.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height);
-      const x = e.clientX - rect.left - size / 2;
-      const y = e.clientY - rect.top - size / 2;
-      
-      ripple.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}px;
-        top: ${y}px;
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.6);
-        transform: scale(0);
-        animation: ${rippleEffect} 0.6s linear;
-        pointer-events: none;
-      `;
-      
-      button.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 600);
-    }
-    
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'message' in err) {
+        setError((err as { message: string }).message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    } 
     // console.log('Form submitted:', { email, password });
   };
-
   return (
     <RootContainer>
       <AnimatedBackground />
@@ -265,7 +304,7 @@ const TrackFinLogin = () => {
                   </Typography>
                 </Box>
                 
-                <form onSubmit={handleSubmit}>
+                <Box component="form" onSubmit={handleSubmit}>
                   <Box sx={{ mb: 3 }}>
                     <StyledTextField
                       fullWidth
@@ -307,7 +346,7 @@ const TrackFinLogin = () => {
                     {/* isSignUp ? 'Create Account' : 'Sign In'*/}
                    { 'Sign In'}
                   </LoginButton>
-                </form>
+                </Box>
                 
                 <Box sx={{ textAlign: 'center', my: 3 }}>
                   <Divider sx={{ color: 'rgba(255, 255, 255, 0.3)', '&::before, &::after': { borderColor: 'rgba(255, 255, 255, 0.3)' } }}>

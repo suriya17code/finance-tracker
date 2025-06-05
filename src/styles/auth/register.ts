@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import {Box,Paper,TextField,Button,Typography,FormControl,Stepper} from '@mui/material';
 import { gradientShift, particleFloat, characterBounce, floatAnimation, chartGrow } from '../animations/register';
-import { display, justifyContent } from '@mui/system';
 
 // Styled components
 export const RootContainer = styled(Box)(({ theme }) => ({
@@ -56,7 +55,7 @@ export const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
   },
 }));
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledTextField = styled(TextField)(({  }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.12)',
     backdropFilter: 'blur(15px)',
@@ -94,7 +93,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export const StyledSelect = styled(FormControl)(({ theme }) => ({
+export const StyledSelect = styled(FormControl)(({  }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.12)',
     backdropFilter: 'blur(15px)',
@@ -130,7 +129,7 @@ export const StyledSelect = styled(FormControl)(({ theme }) => ({
   },
 }));
 
-export const GradientButton = styled(Button)(({ theme }) => ({
+export const GradientButton = styled(Button)(({  }) => ({
   background: 'linear-gradient(45deg, #00b894, #00cec9)',
   borderRadius: 18,
   padding: '18px',
@@ -180,7 +179,7 @@ export const CharacterContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const Character = styled(Box)(({ variant = 'main', theme }:{ variant:string, theme?:any }) => ({
+export const Character = styled(Box)(({ variant = 'main' }:{ variant:string }) => ({
   width: variant === 'main' ? 160 : 100,
   height: variant === 'main' ? 240 : 150,
   background: 'linear-gradient(145deg, #00b894, #00cec9)',
@@ -247,7 +246,7 @@ export const Character = styled(Box)(({ variant = 'main', theme }:{ variant:stri
   }),
 }));
 
-export const FloatingCard = styled(Paper)(({ purpose, theme }:{ purpose:string, theme?:any }) => ({
+export const FloatingCard = styled(Paper)(({ purpose }:{ purpose:string }) => ({
   position: 'absolute',
   backdropFilter: 'blur(25px)',
   background: 'rgba(255, 255, 255, 0.18)',
@@ -279,7 +278,7 @@ export const FloatingCard = styled(Paper)(({ purpose, theme }:{ purpose:string, 
   }),
 }));
 
-export const MiniChart = styled(Box)(({ theme }) => ({
+export const MiniChart = styled(Box)(({ }) => ({
   width: 70,
   height: 35,
   marginTop: 8,

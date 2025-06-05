@@ -43,7 +43,7 @@ export const rippleEffect = keyframes`
   }
 `;
 // Styled components
-export const RootContainer = styled(Box)(({ theme }) => ({
+export const RootContainer = styled(Box)(({  }) => ({
   minHeight: '100vh',
   overflow: 'hidden',
   position: 'relative',
@@ -104,7 +104,7 @@ export const Character = styled(Box)({
     animation: `${wave} 2s ease-in-out infinite`,
   },
 });
-export const FloatingCard = styled(Card)<{animationDelay:any}>(({ animationDelay }) => ({
+export const FloatingCard = styled(Card)<{animationDelay:unknown}>(({ animationDelay }) => ({
   position: 'absolute',
   backdropFilter: 'blur(20px)',
   background: 'rgba(255, 255, 255, 0.15)',
@@ -130,7 +130,7 @@ export const MiniChart = styled(Box)({
   alignItems: 'flex-end',
   gap: 4,
 });
-export const ChartLine = styled(Box)<{height:any,delay:number}>(({ height, delay }) => ({
+export const ChartLine = styled(Box)<{height:unknown,delay:number}>(({ height, delay }) => ({
   width: 8,
   height: `${height}%`,
   background: 'linear-gradient(to top, transparent, rgba(255, 255, 255, 0.6))',

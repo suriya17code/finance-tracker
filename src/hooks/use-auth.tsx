@@ -1,18 +1,18 @@
 'use client';
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import {getSession,login,SignUp,logout,User}from "../lib/fakeAuthApi"
 const useUser = () => {
   
     const [user,setUser]=useState<{ user: User; token: string }|null>(null)
     const [loading,setLoading]= useState<boolean>(false);
-    const [error,setError]=useState<any>(null)
+    const [error,setError]=useState<string|null>(null)
 
     useEffect(()=>{
         try {
            const data = getSession();
            setUser(data)
         } catch (error) {
-            setError("failed to load session")
+            setError(`failed to load session: ${error}`)
         }finally{
             setLoading(false)
         }

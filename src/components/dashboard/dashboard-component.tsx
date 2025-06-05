@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Box,Container,Typography,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,Card,CardContent,Chip,IconButton,Dialog,DialogTitle,DialogContent,DialogActions,TextField,MenuItem, Grid} from '@mui/material';
+import {Box,Container,Typography,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,Card,CardContent,Chip,Dialog,DialogTitle,DialogContent,DialogActions,TextField,MenuItem, Grid} from '@mui/material';
 // import Grid from '@mui/material/Grid';
 import {
   TrendingUp as TrendingUpIcon,
@@ -257,7 +257,7 @@ export default function FinancialDashboard() {
 
           {/* Summary Cards */}
           <Grid container spacing={3} sx={{ mb: 4 ,display:"flex",justifyContent:"center" }}>
-            <Grid item xs={12} md={4}>
+            <Box sx={{width:{xs:"100%",md:"30%"}}}>
               <Card elevation={8} sx={{ textAlign: 'center', p: 2 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
@@ -269,8 +269,8 @@ export default function FinancialDashboard() {
                   <Typography variant="h6">Total Income</Typography>
                 </CardContent>
               </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
+            </Box>
+            <Box sx={{width:{xs:"100%",md:"30%"}}}>
               <Card elevation={8} sx={{ textAlign: 'center', p: 2 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
@@ -282,8 +282,8 @@ export default function FinancialDashboard() {
                   <Typography variant="h6">Total Outgoing</Typography>
                 </CardContent>
               </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
+            </Box>
+            <Box sx={{width:{xs:"100%",md:"30%"}}}>
               <Card elevation={8} sx={{ textAlign: 'center', p: 2 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
@@ -302,13 +302,13 @@ export default function FinancialDashboard() {
                   <Typography variant="h6">Net Balance</Typography>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
           </Grid>
 
           {/* Main Data Tables */}
           <Grid container spacing={4} sx={{ mb: 4,display:"flex",justifyContent:"center" }} >
             {/* Income Section */}
-            <Grid item xs={12} lg={6} sx={{width:"45%"}}>
+            <Box sx={{width:{xs:"100%",lg:"45%"}}}>
               <Paper
                 elevation={10}
                 sx={{
@@ -380,10 +380,9 @@ export default function FinancialDashboard() {
                   Add Income Entry
                 </Button>
               </Paper>
-            </Grid>
-
+            </Box>
             {/* Outgoing Section */}
-            <Grid item xs={12} lg={6} sx={{width:"45%"}} >
+            <Box sx={{width:{xs:"100%",lg:"45%"}}} >
               <Paper
                 elevation={10}
                 sx={{
@@ -454,7 +453,7 @@ export default function FinancialDashboard() {
                   Add Outgoing Entry
                 </Button>
               </Paper>
-            </Grid>
+            </Box>
           </Grid>
 
           {/* Footer */}

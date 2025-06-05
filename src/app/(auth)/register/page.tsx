@@ -100,11 +100,11 @@
 // export default SignUpForm;
 
 import React, { useState, useEffect } from 'react';
-import {Box,Container,TextField,Button,Typography,Select,MenuItem,FormControl,InputLabel,Checkbox,FormControlLabel,Grid,Paper,LinearProgress,Link,Stepper,Step,StepButton,useTheme,useMediaQuery,Fade,Zoom,Slide} from '@mui/material';
-import { Character, CharacterContainer, ChartBar, CustomStepper, FloatingCard, FloatingParticle, GlassmorphicPaper, GradientButton, LogoText, MiniChart, RootContainer, StyledSelect, StyledTextField } from '@/styles/auth/register';
+import {Box,Container,Button,Typography,Select,MenuItem,InputLabel,Checkbox,FormControlLabel,Grid,Link,Step,StepButton,useTheme,useMediaQuery,Fade} from '@mui/material';
+import {  CustomStepper, FloatingParticle, GlassmorphicPaper, GradientButton, LogoText, RootContainer, StyledSelect, StyledTextField } from '@/styles/auth/register';
 import backbutton from "../../../../public/assets/imgs/back-arrow.png";
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import SignupRightside from '@/components/auth/signup-rightside';
 interface fromdata{
     firstName: string,
@@ -124,7 +124,7 @@ const TrackFinSignup = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<fromdata>({
     firstName: '',
     lastName: '',
     email: '',
@@ -139,13 +139,15 @@ const TrackFinSignup = () => {
   
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false); 
-  const router=useRouter()
+  // const router=useRouter()
   // Calculate progress based on filled required fields
   useEffect(() => {
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword', 'income', 'goal'];
-    const filledFields = requiredFields.filter((field:any) => formData[field] && formData[field].trim() !== '');
+    const requiredFields: (keyof fromdata)[] = ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword', 'income', 'goal'];
+ // const filledFields = requiredFields.filter((field:any) => formData[field] && formData[field].trim() !== '');
+    const filledFields = requiredFields.filter((field) => formData[field] && typeof formData[field] === 'string' && (formData[field] as string).trim() !== '');
     const progress = Math.floor((filledFields.length / requiredFields.length) * 3);
-    setActiveStep(Math.min(progress, 2));
+    setActiveStep(Math.min(progress, 2)); 
+ 
   }, [formData]);
 
   const handleNext=()=>{
@@ -155,21 +157,21 @@ const TrackFinSignup = () => {
     setActiveStep(0)
   }
 
-  const handleInputChange = (field:any) => (event:any) => {
-    setFormData((prev:any) => ({
+  const handleInputChange = (field:string) => (event:React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: event.target.value
     }));
   };
 
-  const handleCheckboxChange = (field:any) => (event:any) => {
-    setFormData((prev:any) => ({
+  const handleCheckboxChange = (field:string) => (event:React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: event.target.checked
     }));
   };
 
-  const handleSubmit = async (event:any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     
@@ -282,7 +284,7 @@ const TrackFinSignup = () => {
                     <Select
                       value={formData.income}
                       label="Monthly Income Range"
-                      onChange={handleInputChange('income')}
+                      onChange={()=>handleInputChange('income')}
                       required
                       MenuProps={{
                         PaperProps: {
@@ -307,7 +309,7 @@ const TrackFinSignup = () => {
                     <Select
                       value={formData.goal}
                       label="Primary Financial Goal"
-                      onChange={handleInputChange('goal')}
+                      onChange={()=>handleInputChange('goal')}
                       required
                       MenuProps={{
                         PaperProps: {
