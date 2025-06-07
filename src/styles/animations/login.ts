@@ -56,7 +56,7 @@ export const AnimatedBackground = styled(Box)({
   width: '100%',
   height: '100%',
 //   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
-  background: "linear-gradient(135deg, #6b8e23 0%, #556b2f 50%,rgb(229, 248, 238) 100%)", 
+  background: "linear-gradient(135deg, #6b8e23 0%, #556b2f 50%,rgb(195, 219, 186) 100%)", 
   backgroundSize: '400% 400%',
   animation: `${gradientShift} 15s ease infinite`,
 });
@@ -71,8 +71,10 @@ export const Particle = styled(Box)<{ delay: number }>(({ delay }) => ({
 }));
 export const Character = styled(Box)({
   width: 200,
-  height: 300,
-  background: 'linear-gradient(145deg, #6c5ce7, #a29bfe)',
+  height: 300, 
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
   borderRadius: '20px 20px 40px 40px',
   position: 'relative',
   animation: `${characterBounce} 3s ease-in-out infinite`,
@@ -82,19 +84,7 @@ export const Character = styled(Box)({
   transition: 'transform 0.3s ease',
   '&:hover': {
     transform: 'scale(1.1) rotateY(15deg)',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 30,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: 60,
-    height: 60,
-    background: '#ffeaa7',
-    borderRadius: '50%',
-    boxShadow: 'inset 0 5px 10px rgba(0, 0, 0, 0.1)',
-  },
+  }, 
   '&::after': {
     content: '"👋"',
     position: 'absolute',

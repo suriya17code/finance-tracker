@@ -1,13 +1,28 @@
 "use client"; 
-import GuestGuard from '@/components/auth/guest-guard'
-import React from 'react'
+import GuestGuard from '@/components/auth/guards/guest-guard' 
+import { Box, CircularProgress } from '@mui/material';
+import React, { Suspense } from 'react'
 
 const Home = ({children}:Readonly<{ children: React.ReactNode}>) => {
+  const Skeleton=()=>{
+   return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+}
   return (
     <>
+     <Suspense fallback={<Skeleton />}>
     <GuestGuard>
- {children} {/* 👈 This renders dashboard/page.tsx inside here */}
+ {children} {/* 👈 This renders login/page.tsx inside here */}
  </GuestGuard>
+ </Suspense>
     </>
   )
 }

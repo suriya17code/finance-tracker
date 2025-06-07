@@ -15,7 +15,7 @@ export default function NotFoundPage() {
       textAlign="center"
       px={2}
       sx={{
-        backgroundImage: "url(/assets/common/forbidden-bg.jpg)",
+        // backgroundImage: "url(/assets/common/forbidden-bg.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

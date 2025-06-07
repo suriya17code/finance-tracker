@@ -1,187 +1,123 @@
 'use client';
-// import { Box, TextField, Button, Typography, Paper } from '@mui/material';
-// import React, { useState } from 'react';
-// import { SignUp } from '@/lib/fakeAuthApi';
-// import { useRouter } from 'next/navigation';
-// const SignUpForm = () => {
-//   const [username, setUsername] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [error, setError] = useState('');
-//   const router=useRouter();
-//   const handleSignUp = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     setError('');
 
-//     try {
-//       // Call your signup function here
-//       await SignUp(username, email, password);
-//        router.push('/dashboard');
-//       // Optionally redirect or show success message
-//     } catch (err: any) {
-//       setError(err.message || 'Something went wrong');
-//     }
-//   };
-// const handleLogin=()=>{
-//      router.replace('/login');
-// }
-//   return (
-//     <form onSubmit={handleSignUp}>
-//       <Paper
-//         elevation={3}
-//         sx={{
-//           width: '100%',
-//           maxWidth: 400,
-//           margin: '0 auto',
-//           padding: 4,
-//           backgroundColor: 'white',
-//           color: 'black',
-//           display: 'flex',
-//           flexDirection: 'column',
-//           gap: 2,
-//           height: 500,
-//           justifyContent: 'center',
-//           borderRadius: 2,
-//         }}
-//       >
-//         <Typography variant="h5" align="center" gutterBottom>
-//           Sign Up
-//         </Typography>
-
-//         <TextField
-//           label="Username"
-//           variant="outlined"
-//           fullWidth
-//           onChange={e => setUsername(e.target.value)}
-//         />
-//         <TextField
-//           label="Email"
-//           type="email"
-//           variant="outlined"
-//           fullWidth
-//           onChange={e => setEmail(e.target.value)}
-//         />
-//         <TextField
-//           label="Password"
-//           type="password"
-//           variant="outlined"
-//           fullWidth
-//           onChange={e => setPassword(e.target.value)}
-//         />
-
-//         {error && (
-//           <Typography variant="body2" color="error" align="center">
-//             {error}
-//           </Typography>
-//         )}
-
-//         <Button
-//           type="submit"
-//           variant="contained"
-//           fullWidth
-//           sx={{
-//             mt: 2,
-//             fontWeight: 600,
-//             textTransform: 'none',
-//           }}
-//         >
-//           Sign Up
-//         </Button>
-
-//         <Box sx={{display:"flex",}}>
-//             <Typography variant="caption"> Already have Account? </Typography>
-//              <Typography variant="caption" sx={{color:"orange"}} onClick={handleLogin}> login </Typography>
-//         </Box>
-//       </Paper>
-//     </form>
-//   );
-// };
-
-// export default SignUpForm;
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {Box,Container,Button,Typography,Select,MenuItem,InputLabel,Checkbox,FormControlLabel,Grid,Link,Step,StepButton,useTheme,useMediaQuery,Fade} from '@mui/material';
 import {  CustomStepper, FloatingParticle, GlassmorphicPaper, GradientButton, LogoText, RootContainer, StyledSelect, StyledTextField } from '@/styles/auth/register';
 import backbutton from "../../../../public/assets/imgs/back-arrow.png";
 import Image from 'next/image';
-// import { useRouter } from 'next/navigation';
-import SignupRightside from '@/components/auth/signup-rightside';
-interface fromdata{
-    firstName: string,
-    lastName: string,
-    email: string,
-    phone: string,
-    password: string,
-    confirmPassword: string,
-    income: string,
-    goal: string,
-    termsAccepted: boolean,
-    emailUpdates: boolean,
+import { useRouter } from 'next/navigation';
+import SignupRightside from '@/components/auth/register/signup-rightside';
+ import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { SignUp } from '@/lib/fakeAuthApi';
+import { useSnackbar } from '@/components/common/snackBar';
+ 
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  income: string;
+  goal: string;
+  termsAccepted: boolean;
+  emailUpdates: boolean;
 }
-
 
 const TrackFinSignup = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  const [formData, setFormData] = useState<fromdata>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    income: '',
-    goal: '',
-    termsAccepted: false,
-    emailUpdates: false,
-  });
-  
-  const [activeStep, setActiveStep] = useState(0);
-  const [isLoading, setIsLoading] = useState(false); 
-  // const router=useRouter()
-  // Calculate progress based on filled required fields
-  useEffect(() => {
-    const requiredFields: (keyof fromdata)[] = ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword', 'income', 'goal'];
- // const filledFields = requiredFields.filter((field:any) => formData[field] && formData[field].trim() !== '');
-    const filledFields = requiredFields.filter((field) => formData[field] && typeof formData[field] === 'string' && (formData[field] as string).trim() !== '');
-    const progress = Math.floor((filledFields.length / requiredFields.length) * 3);
-    setActiveStep(Math.min(progress, 2)); 
  
-  }, [formData]);
-
+  const [activeStep, setActiveStep] = useState(0);
+  // const [isLoading, setIsLoading] = useState(false); 
+  const router=useRouter()
+  const {showSnackbar}=useSnackbar()           
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    phone: Yup.string()
+      .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
+      .required('Phone number is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], 'Passwords must match')
+      .required('Confirm password is required'),
+    income: Yup.string().required('Income range is required'),
+    goal: Yup.string().required('Financial goal is required'),
+    termsAccepted: Yup.boolean()
+      .oneOf([true], 'You must accept the terms and conditions')
+      .required('You must accept the terms and conditions'),
+    emailUpdates: Yup.boolean(),
+  });
+    const formik = useFormik<FormValues>({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      income: '',
+      goal: '',
+      termsAccepted: false,
+      emailUpdates: false,
+    } as FormValues,
+    validationSchema,
+    onSubmit: async (values) => {
+      try {  
+        await SignUp(
+          values.firstName,
+          values.email,
+          values.password
+        );
+        router.push('/dashboard');
+      } catch (error) {
+       let errorMessage = 'An unknown error occurred';
+   
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  } else if (typeof error === 'string') {
+    errorMessage = error;
+  } else if (error && typeof error === 'object' && 'message' in error) {
+    errorMessage = error.message as string;
+  }
+ 
+  showSnackbar(errorMessage, "warning");
+        console.error('Submission error:', error);
+      }
+    },
+  });
   const handleNext=()=>{
-     setActiveStep(1)
+   // Validate current step before proceeding
+    if (activeStep === 0) {
+      const errors = {
+        firstName: !formik.values.firstName ? 'Required' : '',
+        lastName: !formik.values.lastName ? 'Required' : '',
+        email: !formik.values.email ? 'Required' : '',
+        phone: !formik.values.phone ? 'Required' : '',
+        password: !formik.values.password ? 'Required' : '',
+        confirmPassword: !formik.values.confirmPassword ? 'Required' : '',
+      };
+
+      // formik.setErrors(errors as any);
+      
+      if (Object.values(errors).some(error => error)) {
+        showSnackbar("fill the form","warning");
+        return
+      }
+    }
+    setActiveStep(prev => prev + 1);
   }
   const handleBack=()=>{
-    setActiveStep(0)
+      setActiveStep(prev => prev - 1);
   }
 
-  const handleInputChange = (field:string) => (event:React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: event.target.value
-    }));
-  };
 
-  const handleCheckboxChange = (field:string) => (event:React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: event.target.checked
-    }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('Account created successfully! Welcome to TrackFin!');
-    }, 2000);
-  };
-
+ 
   const incomeRanges = [
     { value: '0-25000', label: '₹0 - ₹25,000' },
     { value: '25000-50000', label: '₹25,000 - ₹50,000' },
@@ -212,21 +148,29 @@ const TrackFinSignup = () => {
             return(
               <>
               <Box sx={{display: 'flex',flexWrap: 'wrap',gap: 2,mb: 2,}}>
-                    <Box sx={{ width: { xs: '100%', md: '40%' }}}>
+                    <Box sx={{ width: { xs: '100%', md: '50%' }}}>
                       <StyledTextField
                         fullWidth
                         label="First Name"
-                        value={formData.firstName}
-                        onChange={handleInputChange('firstName')}
+                        name="firstName"
+                        value={formik.values.firstName}
+                        error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                        onBlur={formik.handleBlur} 
+                        helperText={formik.touched.firstName && formik.errors.firstName}         
+                        onChange={formik.handleChange}
                         required
                       />
-                    </Box>
-                    <Box sx={{ width: { xs: '100%', md: '40%' }}}>
+                     </Box>
+                    <Box sx={{ width: { xs: '100%', md: '45%' }}}>
                       <StyledTextField
                         fullWidth
                         label="Last Name"
-                        value={formData.lastName}
-                        onChange={handleInputChange('lastName')}
+                        name="lastName"
+                        value={formik.values.lastName}
+                        onChange={formik.handleChange}      
+                        onBlur={formik.handleBlur}                   
+                        error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                        helperText={formik.touched.lastName && formik.errors.lastName}
                         required
                       />
                     </Box>
@@ -236,8 +180,12 @@ const TrackFinSignup = () => {
                     fullWidth
                     label="Email Address"
                     type="email"
-                    value={formData.email}
-                    onChange={handleInputChange('email')}
+                    name='email'
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    error={formik.touched.email &&Boolean(formik.errors.email)}
+                    onBlur={formik.handleBlur}
+                    helperText={formik.touched.email &&formik.errors.email}
                     required
                     sx={{ mb: 2 }}
                   />
@@ -246,30 +194,43 @@ const TrackFinSignup = () => {
                     fullWidth
                     label="Phone Number"
                     type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange('phone')}
+                    name="phone"
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}            
+                    error={formik.touched.phone && Boolean(formik.errors.phone)}
+                    onBlur={formik.handleBlur}
+                    helperText={formik.touched.phone && formik.errors.phone}
+                            
                     required
                     sx={{ mb: 2 }}
                   />
 
                   <Grid  sx={{display: 'flex',flexWrap: 'wrap',gap: 2,mb: 2, }}>
-                    <Box sx={{ width: { xs: '100%', md: '40%' }}}>
+                    <Box sx={{ width: { xs: '100%', md: '47%' }}}>
                       <StyledTextField
                         fullWidth
                         label="Password"
                         type="password"
-                        value={formData.password}
-                        onChange={handleInputChange('password')}
-                        required
+                        name='password'
+                        value={formik.values.password}
+                        onChange={formik.handleChange}     
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        onBlur={formik.handleBlur}
+                        helperText={formik.touched.password && formik.errors.password} 
+                       required
                       />
                     </Box>
-                    <Box sx={{ width: { xs: '100%', md: '40%' }}}>
+                    <Box sx={{ width: { xs: '100%', md: '48%' }}}>
                       <StyledTextField
                         fullWidth
                         label="Confirm Password"
                         type="password"
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange('confirmPassword')}
+                        name="confirmPassword"
+                        value={formik.values.confirmPassword}
+                        onChange={formik.handleChange}                        
+                        error={formik.touched.confirmPassword &&  Boolean(formik.errors.confirmPassword)}
+                        onBlur={formik.handleBlur}
+                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                         required
                       />
                     </Box>
@@ -282,9 +243,10 @@ const TrackFinSignup = () => {
               <StyledSelect fullWidth sx={{ mb: 2 }}>
                     <InputLabel>Monthly Income Range</InputLabel>
                     <Select
-                      value={formData.income}
+                      value={formik.values.income}
                       label="Monthly Income Range"
-                      onChange={()=>handleInputChange('income')}
+                      name='income'
+                      onChange={formik.handleChange}                    
                       required
                       MenuProps={{
                         PaperProps: {
@@ -307,9 +269,10 @@ const TrackFinSignup = () => {
                   <StyledSelect fullWidth sx={{ mb: 3 }}>
                     <InputLabel>Primary Financial Goal</InputLabel>
                     <Select
-                      value={formData.goal}
+                      value={formik.values.goal}
                       label="Primary Financial Goal"
-                      onChange={()=>handleInputChange('goal')}
+                      name='goal'
+                      onChange={formik.handleChange}                       
                       required
                       MenuProps={{
                         PaperProps: {
@@ -332,9 +295,10 @@ const TrackFinSignup = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={formData.termsAccepted}
-                        onChange={handleCheckboxChange('termsAccepted')}
-                        required
+                      checked={formik.values.termsAccepted}
+                      onChange={formik.handleChange}
+                      name="termsAccepted"
+                      required
                         sx={{
                           color: 'rgba(255, 255, 255, 0.65)',
                           '&.Mui-checked': {
@@ -361,14 +325,15 @@ const TrackFinSignup = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={formData.emailUpdates}
-                        onChange={handleCheckboxChange('emailUpdates')}
-                        sx={{
-                          color: 'rgba(255, 255, 255, 0.65)',
-                          '&.Mui-checked': {
-                            color: '#00b894',
-                          },
-                        }}
+                    checked={formik.values.emailUpdates}
+                    onChange={formik.handleChange}
+                    name="emailUpdates"
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.65)',
+                      '&.Mui-checked': {
+                        color: '#00b894',
+                      },
+                    }}
                       />
                     }
                     label={<Typography variant="body2" sx={{ color:'rgba(255, 255, 255, 0.8)' }}>
@@ -402,7 +367,7 @@ const TrackFinSignup = () => {
 
             <Fade in timeout={1000}>
               <GlassmorphicPaper elevation={0}>
-                <Box textAlign="center" mb={4}>
+                <Box textAlign="center"  >
                   <LogoText variant="h3">TrackFin</LogoText>
                   <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.85)', mb: 1 }}>
                     Start Your Financial Journey
@@ -420,7 +385,7 @@ const TrackFinSignup = () => {
                   ))}
                 </CustomStepper>
  
-                <Box component="form" onSubmit={handleSubmit}>
+                <Box component="form" onSubmit={formik.handleSubmit}>
                   {steppercomponent()}
        { activeStep===0?
                  ( <GradientButton 
@@ -428,7 +393,7 @@ const TrackFinSignup = () => {
                     fullWidth
                     variant="contained"
                     size="large"
-                    disabled={isLoading}
+                    // disabled={isLoading}
                   >
                     {"Next Step"}
                   </GradientButton>
@@ -438,9 +403,9 @@ const TrackFinSignup = () => {
                     fullWidth
                     variant="contained"
                     size="large"
-                    disabled={isLoading}
+                    // disabled={isLoading}
                   >
-                    {isLoading ? 'Creating Account...' : 'Create Account'}
+                    {'Create Account'}
                   </GradientButton>
                   )}
                   <Box textAlign="center" mt={2}>

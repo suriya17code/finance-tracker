@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SnackbarProvider } from "@/components/common/snackBar";
 // import StoreProvider from "./storeProvider";
 
 const geistSans = Geist({
@@ -23,8 +24,10 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* <StoreProvider> */}
+        <SnackbarProvider>
        {children}  {/* 👈 This renders (pages)/layout.tsx inside here */}
         {/* </StoreProvider> */}
+        </SnackbarProvider>
       </body>
     </html>
   );

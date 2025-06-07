@@ -1,5 +1,5 @@
 "use client";
-import AuthGuard from '@/components/auth/auth-guard'
+import AuthGuard from '@/components/auth/guards/auth-guard'
 import { Box, CircularProgress } from '@mui/material';
 import React, { Suspense } from 'react'
 

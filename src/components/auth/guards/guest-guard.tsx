@@ -14,6 +14,7 @@ const GuestGuard = ({children}: GuestGuardProps) => {
     const {user,loading,error}=useUser();
     const router=useRouter()
     const checkPermissions = async () :Promise<void> => {
+      
          if(loading) return
          if(error) return setChecking(false)
          if(user){
