@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Box,Container,Typography,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,Card,CardContent,Dialog,DialogTitle,DialogContent,DialogActions,TextField,MenuItem, Grid, ClickAwayListener, Grow, Popper} from '@mui/material';
+import {Box,Container,Typography,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,Card,CardContent,Dialog,DialogTitle,DialogContent,DialogActions,TextField,MenuItem, Grid} from '@mui/material';
 // import Grid from '@mui/material/Grid';
 import {
   TrendingUp as TrendingUpIcon,
@@ -9,9 +9,7 @@ import {
   AttachMoney as AttachMoneyIcon,
   CreditCard as CreditCardIcon
 } from '@mui/icons-material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { useRouter } from 'next/navigation'; 
+import { createTheme, ThemeProvider } from '@mui/material/styles';  
 const theme = createTheme({
   palette: {
     primary: {
@@ -139,12 +137,11 @@ const FloatingShapes = () => (
 );
 
 export default function FinancialDashboard() {
-  const [currentDate, setCurrentDate] = useState('');
+  // const [currentDate, setCurrentDate] = useState('');
   const [lastUpdated, setLastUpdated] = useState('');
   const [incomeDialogOpen, setIncomeDialogOpen] = useState(false);
   const [outgoingDialogOpen, setOutgoingDialogOpen] = useState(false);
-  const [newEntry, setNewEntry] = useState({ source: '', amount: '' });
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [newEntry, setNewEntry] = useState({ source: '', amount: '' }); 
   const [incomeData, setIncomeData] = useState([
     { source: 'Register Sales', amount: 3568.89 },
     { source: 'Sales Tax', amount: 365.72 },
@@ -157,8 +154,7 @@ export default function FinancialDashboard() {
     { category: 'Credit Card', amount: 2564.27 },
     { category: 'Lotto Payout', amount: 825.00 },
     { category: 'Bank Deposit', amount: 60.00 },
-  ]);
-  const router =useRouter()
+  ]); 
   const totalIncome = incomeData.reduce((sum, item) => sum + item.amount, 0);
   const totalOutgoing = outgoingData.reduce((sum, item) => sum + item.amount, 0);
   const netBalance = totalIncome - totalOutgoing;
@@ -166,11 +162,7 @@ export default function FinancialDashboard() {
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
-      setCurrentDate(now.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      }));
+     
       setLastUpdated(now.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit' 
@@ -205,20 +197,8 @@ export default function FinancialDashboard() {
   };
 
   const incomeCategories = ['Register Sales', 'Sales Tax', 'Lotto', 'Instant Lottery', 'Other'];
-  const outgoingCategories = ['Cash', 'Credit Card', 'Lotto Payout', 'Bank Deposit', 'Other'];
-  const username = sessionStorage.getItem("login-token");
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleLogout = async () => {
-  
-      sessionStorage.clear();
-      router.replace("/login"); 
-      
-  };
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
+  const outgoingCategories = ['Cash', 'Credit Card', 'Lotto Payout', 'Bank Deposit', 'Other']; 
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -233,63 +213,6 @@ export default function FinancialDashboard() {
         
         <Container maxWidth="xl">
           {/* Header */}
-          <Paper
-            elevation={10}
-            sx={{
-              p: 3,
-              mb: 4,
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: 3,
-            }}
-          >
-            <Grid container justifyContent="space-between" alignItems="center">
-              <Grid>
-                <Typography variant="h4" gutterBottom>
-                  Welcome Back!
-                </Typography>
-                <Typography variant="h6" color="primary.main">
-                  Your Financial Dashboard
-                </Typography>
-              </Grid>
-              <Grid  sx={{ textAlign: 'right'}} >
-              <Box 
-              sx={{background: 'linear-gradient(45deg, #6b8e23, #8fbc8f)',color: 'white',fontWeight: 600,mb: 1,width: '100%',textAlign: 'center',display: 'block',padding:"10px",borderRadius:"25px"}}
-              onClick={handleClick}>
-              {username ? JSON.parse(username).user.username : 'Guest'}
-            </Box>
-                <Typography variant="h6" color="primary.dark">
-                {currentDate}
-                </Typography>
-              </Grid>
-            </Grid>
-             <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} role={undefined} placement="bottom-end" transition disablePortal >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin: placement === 'bottom-end' ? 'left top' : 'left bottom',marginTop: '10px'
-                }}
-              >
-                <Paper sx={{backgroundColor:" #6b8e23", }}>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <Button
-                      onClick={handleLogout}
-                      sx={{ padding: "2px 5px", color: "whitesmoke", height: '40px' }}
-                      disableRipple
-                      disableFocusRipple
-                      tabIndex={-1}
-                    >
-                      <LogoutIcon sx={{ mr: '6px' }} />
-                      Logout
-                    </Button>
-                  </ClickAwayListener>
-
-                </Paper>
-
-              </Grow>
-            )}
-          </Popper>
-          </Paper>
 
           {/* Summary Cards */}
           <Grid container spacing={3} sx={{ mb: 4 ,display:"flex",justifyContent:"center" }}>
