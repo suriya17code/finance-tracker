@@ -1,12 +1,12 @@
 "use client";
-import FinancialDashboard from "@/components/dashboard/dashboard-component"; 
-import SpeedeLandingPage from "../profile/page";
+import DashboardComponent from "@/components/dashboard/dashboard-component"; 
+import AnalyticDataReport from "@/components/dashboard/analytic-data";
 function Dashboard() {
 
   return (
-    <> 
-    <SpeedeLandingPage/>
-    <FinancialDashboard/> 
+    <>
+    <DashboardComponent/>
+     <AnalyticDataReport/>
     </> 
   );
 }

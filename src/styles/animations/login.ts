@@ -82,6 +82,7 @@ export const Character = styled(Box)({
   transformStyle: 'preserve-3d',
   cursor: 'pointer',
   transition: 'transform 0.3s ease',
+  
   '&:hover': {
     transform: 'scale(1.1) rotateY(15deg)',
   }, 

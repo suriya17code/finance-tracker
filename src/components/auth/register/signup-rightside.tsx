@@ -10,9 +10,15 @@ const SignupRightside = () => {
                   <Slide direction="left" in timeout={1500}>
                     <Box sx={{ position: 'relative', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <CharacterContainer>
-                        <Character variant="main" />
-                        <Character variant="left" />
-                        <Character variant="right" />
+                        <Character variant="main" >
+                          <Box component={"img"} src={'/assets/auth-v2-register-illustration-dark.png'}/>
+                        </Character>
+                        <Character variant="left" >  
+                           <Box component={"img"} src={'/assets/create-account-dark.png'}/>
+                       </Character>
+                        {/* <Character variant="right" >
+                             <Box component={"img"} src={'/assets/girl-with-laptop.png'}/>
+                       </Character> */}
                       </CharacterContainer>
     
                       {/* Floating Cards */}
